@@ -1,0 +1,27 @@
+.folder-container {
+  margin-bottom: 5px;
+}
+
+.folder,
+.file {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 10px;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.folder:hover,
+.file:hover {
+  background-color: #f0f0f0;
+}
+
+.item-name {
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+.selected {
+  background-color: #d0e0ff;
+}
