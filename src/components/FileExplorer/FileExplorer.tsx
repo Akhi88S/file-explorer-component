@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FileData } from '../../types/fileTypes';
 import './FileExplorer.css';
+import PopupMenu from '../PopupMenu/PopupMenu';
 
 interface FileExplorerProps {
   files: FileData;
@@ -9,8 +10,14 @@ interface FileExplorerProps {
 const FileExplorer: React.FC<FileExplorerProps> = ({ files }) => {
   const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [popupVisible, setPopupVisible] = useState<boolean>(false);
+  const [popupPosition, setPopupPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [currentFile, setCurrentFile] = useState<string | null>(null);
 
+  // Handle folder expand/collapse
   const handleFolderClick = (folderName: string) => {
     setExpandedFolders((prev) =>
       prev.includes(folderName)
@@ -26,6 +33,13 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files }) => {
   const handleRightClick = (e: React.MouseEvent, fileName: string) => {
     e.preventDefault();
     setCurrentFile(fileName);
+    setPopupPosition({ x: e.clientX, y: e.clientY });
+    setPopupVisible(true);
+  };
+
+  const handleAction = (action: string) => {
+    console.log(`File: ${currentFile}, Action: ${action}`); // console after right click selection
+    setPopupVisible(false);
   };
 
   // Recursive function to render file/folder structure
@@ -80,7 +94,14 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files }) => {
     );
   };
 
-  return <div>{renderFileStructure(files)}</div>;
+  return (
+    <div>
+      {renderFileStructure(files)}
+      {popupVisible && popupPosition && (
+        <PopupMenu position={popupPosition} onAction={handleAction} />
+      )}
+    </div>
+  );
 };
 
 export default FileExplorer;
